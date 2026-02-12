@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Map Academy - Mappe di Karnaugh Interattive</title>
+    <link rel="stylesheet" href="karnaugh.css">
+</head>
+<body>
+    <div class="intro-page" id="introPage">
+        <div class="intro-content">
+            <div class="intro-header">
+                <div class="intro-icon">⚡</div>
+                <h1>K-Map Academy</h1>
+                <div class="lesson-badge">Semplificazione con Mappe di Karnaugh</div>
+            </div>
+
+            <div class="intro-description">
+                <h2>📚 Cosa Imparerai</h2>
+                <p class="intro-subtitle">
+                    Impara a semplificare reti logiche usando le <strong>Mappe di Karnaugh</strong>. 
+                    Questo metodo grafico ti permetterà di minimizzare funzioni booleane 
+                    partendo da tabelle di verità con 4 ingressi (A, B, C, D) e 1 uscita (U).
+                </p>
+            </div>
+
+            <div class="learning-objectives">
+                <div class="objective-column">
+                    <h3>📊 Tabella di Verità</h3>
+                    <ul>
+                        <li>Leggere tabelle di verità</li>
+                        <li>Identificare mintermini (output = 1)</li>
+                        <li>Convertire valori binari</li>
+                    </ul>
+                </div>
+
+                <div class="objective-column">
+                    <h3>🗺️ Mappa di Karnaugh</h3>
+                    <ul>
+                        <li>Compilare la K-Map (4×4)</li>
+                        <li>Gray Code per righe/colonne</li>
+                        <li>Posizionamento corretto degli 1</li>
+                    </ul>
+                </div>
+
+                <div class="objective-column">
+                    <h3>🔲 Raggruppamenti</h3>
+                    <ul>
+                        <li>Individuare gruppi da 1, 2, 4, 8</li>
+                        <li>Gruppi rettangolari e circolari</li>
+                        <li>Ottimizzare i raggruppamenti</li>
+                    </ul>
+                </div>
+
+                <div class="objective-column">
+                    <h3>🔌 Costo Logico</h3>
+                    <ul>
+                        <li>Calcolare il numero di porte</li>
+                        <li>Sommare NOT, AND, OR</li>
+                        <li>Valutare la complessità</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="intro-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🎲</div>
+                    <h4>Generazione Casuale</h4>
+                    <p>Ogni esercizio è unico con 3-8 mintermini casuali</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h4>Raggruppamenti Colorati</h4>
+                    <p>Visualizza ogni gruppo con colori distinti</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h4>Verifica Passo-Passo</h4>
+                    <p>Controllo immediato per ogni fase dell'esercizio</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h4>Sistema di Punteggio</h4>
+                    <p>Guadagna punti per risposte corrette e veloci</p>
+                </div>
+            </div>
+
+            <div class="intro-stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Fasi per Esercizio</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">Celle K-Map</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Esercizi Generati</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">~15</div>
+                    <div class="stat-label">Minuti</div>
+                </div>
+            </div>
+
+            <button class="btn-start-lesson" onclick="iniziaEsercizio()">
+                ⚡ Inizia Esercizio
+                <span class="btn-subtitle">Generiamo una tabella casuale!</span>
+            </button>
+
+            <div class="intro-tips">
+                <p><strong>💡 Suggerimento:</strong> Ricorda il <em>Gray Code</em>: le intestazioni cambiano di 1 bit alla volta (00, 01, 11, 10)!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-app" id="mainApp" style="display: none;">
+        <header class="main-header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                K-Map Academy
+            </div>
+            <div class="progress-container">
+                <span id="step-indicator">Fase 1 di 8: Analizza la Tabella</span>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+            <div class="stats-box">
+                <div class="score-box">
+                    <span class="coin-icon">🏆</span>
+                    <span id="scoreVal">0</span>
+                </div>
+                <div class="timer-box">
+                    <span class="timer-icon">⏱️</span>
+                    <span id="timerVal">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="workspace">
+<section class="steps-column">
+                
+                <div class="step-card active" id="step1">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3>📊 Analizza la Tabella di Verità</h3>
+                            <p>Conta quanti sono gli output U = 1 (mintermini)</p>
+                        </div>
+                    </div>
+                    <div class="step-input">
+                        <label>Numero di mintermini (U = 1):</label>
+                        <input type="number" id="inp1" min="1" max="16" placeholder="?">
+                    </div>
+                    <button class="btn-verify" onclick="verificaFase(1)">✓ Verifica</button>
+                    <div id="feedback1" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step2">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3>🔢 Identifica i Mintermini</h3>
+                            <p>Indica le righe dove U = 1 (in decimale, separati da virgola)</p>
+                        </div>
+                    </div>
+                    <div class="step-input">
+                        <label>Mintermini (es: 0,3,7,12):</label>
+                        <input type="text" id="inp2" placeholder="0,3,7,12">
+                    </div>
+                    <button class="btn-verify" id="btn2" onclick="verificaFase(2)" disabled>✓ Verifica</button>
+                    <div id="feedback2" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step3">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3>🗺️ Compila la Mappa di Karnaugh</h3>
+                            <p>Clicca sulle celle corrispondenti ai mintermini per inserire gli 1</p>
+                        </div>
+                    </div>
+                    <button class="btn-verify" id="btn3" onclick="verificaFase(3)" disabled>✓ Verifica K-Map</button>
+                    <div id="feedback3" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step4">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h3>🔲 Pianifica i Raggruppamenti</h3>
+                            <p>Quanti gruppi ottimali servono per coprire tutti gli 1?</p>
+                        </div>
+                    </div>
+                    <div class="step-input">
+                        <label>Numero di gruppi necessari:</label>
+                        <input type="number" id="inp4" min="1" max="8" placeholder="?">
+                    </div>
+                    <button class="btn-verify" id="btn4" onclick="verificaFase(4)" disabled>✓ Verifica</button>
+                    <div id="feedback4" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step5">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h3>🎨 Disegna i Raggruppamenti</h3>
+                            <p>Seleziona le celle per ogni gruppo (F1, F2, ...) usando i pulsanti colorati</p>
+                        </div>
+                    </div>
+                    <div id="group-controls" class="group-controls"></div>
+                    <button class="btn-verify" id="btn5" onclick="verificaFase(5)" disabled>✓ Verifica Raggruppamenti</button>
+                    <div id="feedback5" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step6">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h3>✏️ Equazioni dei Gruppi</h3>
+                            <p>Scrivi l'equazione AND per ogni gruppo. <br><em>(Guarda i numeri delle celle indicati!)</em></p>
+                        </div>
+                    </div>
+                    <div id="equations-input"></div>
+                    <button class="btn-verify" id="btn6" onclick="verificaFase(6)" disabled>✓ Verifica Equazioni</button>
+                    <div id="feedback6" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked" id="step7">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <div>
+                            <h3>🔗 Equazione Finale (SOP)</h3>
+                            <p>Combina tutti i gruppi con OR per ottenere U</p>
+                        </div>
+                    </div>
+                    <div class="step-input">
+                        <label>U = </label>
+                        <input type="text" id="inp7" placeholder="F1 + F2 + F3" style="width: 100%;">
+                    </div>
+                    <button class="btn-verify" id="btn7" onclick="verificaFase(7)" disabled>✓ Verifica Equazione</button>
+                    <div id="feedback7" class="feedback-msg"></div>
+                </div>
+
+                <div class="step-card locked final-challenge" id="step8">
+                    <div class="step-header">
+                        <div class="step-number">8</div>
+                        <div>
+                            <h3>💰 Calcolo Costo Logico</h3>
+                            <p>Calcola il numero di porte necessarie (standard 2 ingressi).</p>
+                        </div>
+                    </div>
+                    <div class="hint-box">
+                        💡 <strong>Regole:</strong><br>
+                        1. <strong>NOT:</strong> Conta le variabili negate distinte (es: A'B + A'C conta 1 NOT per A).<br>
+                        2. <strong>AND:</strong> Per un termine con N ingressi servono N-1 porte AND.<br>
+                        3. <strong>OR:</strong> Per sommare M gruppi servono M-1 porte OR.
+                    </div>
+                    <div class="step-input" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <div style="flex: 1;">
+                            <label>Porte NOT:</label>
+                            <input type="number" id="inp8-not" min="0" placeholder="0">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Porte AND:</label>
+                            <input type="number" id="inp8-and" min="0" placeholder="0">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Porte OR:</label>
+                            <input type="number" id="inp8-or" min="0" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="step-input">
+                        <label>Costo Totale (Somma):</label>
+                        <input type="number" id="inp8-total" min="0" placeholder="Totale">
+                    </div>
+                    <button class="btn-verify" id="btn8" onclick="verificaFase(8)" disabled>🎉 Completa Esercizio</button>
+                    <div id="feedback8" class="feedback-msg"></div>
+                </div>
+                <div class="step-card" id="step9" style="display: none;">
+                    <div class="step-header">
+                        <div class="step-number">9</div>
+                        <div>
+                            <h3>🔌 Schema Logico Finale</h3>
+                            <p>Ecco il circuito digitale che realizza la funzione minimizzata.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="circuit-result-container">
+                        <div class="circuit-equation-display" id="finalEquationDisplay">
+                            U = ...
+                        </div>
+                        
+                        <div class="circuit-canvas-wrapper" id="circuitCanvasWrapper">
+                            <svg id="circuitSvg" width="100%" height="100%" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+                                </svg>
+                        </div>
+                        
+                        <div class="circuit-legend">
+                            <span style="color:var(--info)">● Input</span>
+                            <span style="color:#ff5555">● NOT</span>
+                            <span style="color:#bd93f9">D AND</span>
+                            <span style="color:var(--success)">) OR</span>
+                        </div>
+
+                        <div id="feedback9" class="feedback-msg success">
+                            🎉 Esercizio completato! Hai analizzato, semplificato e ingegnerizzato il circuito.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="display-column">
+                
+                <div class="truth-table-container">
+                    <h3>📊 Tabella di Verità</h3>
+                    <div class="truth-table" id="truthTable">
+                        </div>
+                </div>
+
+                <div class="kmap-container">
+                    <h3>🗺️ Mappa di Karnaugh</h3>
+                    <div class="kmap-wrapper">
+                        <div class="kmap-labels-top">
+                            <div class="kmap-corner">AB\CD</div>
+                            <div class="kmap-label">00</div>
+                            <div class="kmap-label">01</div>
+                            <div class="kmap-label">11</div>
+                            <div class="kmap-label">10</div>
+                        </div>
+                        <div class="kmap-grid-row">
+                            <div class="kmap-label-left">00</div>
+                            <div class="kmap-grid" id="kmapGrid">
+                                </div>
+                        </div>
+                        <div class="kmap-grid-row">
+                            <div class="kmap-label-left">01</div>
+                        </div>
+                        <div class="kmap-grid-row">
+                            <div class="kmap-label-left">11</div>
+                        </div>
+                        <div class="kmap-grid-row">
+                            <div class="kmap-label-left">10</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="console-log" id="consoleBox">
+                    <div class="console-header">📝 Log dell'Esercizio</div>
+                    > Esercizio generato. Inizia dalla Fase 1!<br>
+                </div>
+
+                <button class="btn-new-exercise" onclick="nuovoEsercizio()" style="display: none;" id="btnNewExercise">
+                    🔄 Nuovo Esercizio
+                </button>
+
+            </section>
+        </div>
+    </div>
+
+    <div class="tooltip-overlay" id="tooltipOverlay"></div>
+
+    <script src="karnaugh.js"></script>
+</body>
+</html>
